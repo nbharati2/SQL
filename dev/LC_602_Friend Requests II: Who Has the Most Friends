@@ -1,0 +1,12 @@
+#https://leetcode.com/problems/friend-requests-ii-who-has-the-most-friends/description/
+with all_friends as
+(select requester_id  as user_id from RequestAccepted
+union all
+select accepter_id  as user_id from RequestAccepted),
+most_friends as 
+(select user_id,count(*) as num from all_friends group by user_id  ),
+max_friends as(
+select max(num) as num from most_friends)
+select mo.user_id as id,ma.num from most_friends mo
+join max_friends ma
+on mo.num = ma.num
