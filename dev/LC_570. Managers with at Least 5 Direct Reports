@@ -1,0 +1,8 @@
+select ee.name 
+FROM Employee e
+join
+Employee ee on
+e.managerId = ee.id
+WHERE e.managerId IS NOT NULL
+GROUP BY e.managerId
+HAVING COUNT(*) >= 5;
