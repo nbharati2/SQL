@@ -1,0 +1,33 @@
+#https://leetcode.com/problems/investments-in-2016/description/
+select round(sum(tiv_2016),2) as tiv_2016 
+from Insurance
+where tiv_2015 IN (
+    select tiv_2015 from Insurance group by tiv_2015 having count(*) > 1
+) AND (lat,lon) IN
+(SELECT lat, lon
+FROM insurance
+GROUP BY lat, lon
+HAVING COUNT(*) = 1
+
+
+
+-- CTEs just name the helper sets; the filtering is done via JOINs
+WITH dup_2015 AS (
+  SELECT tiv_2015
+  FROM insurance
+  GROUP BY tiv_2015
+  HAVING COUNT(*) > 1
+),
+unique_loc AS (
+  SELECT lat, lon
+  FROM insurance
+  GROUP BY lat, lon
+  HAVING COUNT(*) = 1
+)
+SELECT ROUND(SUM(i.tiv_2016), 2) AS tiv_2016
+FROM insurance AS i
+JOIN dup_2015 AS d
+  ON d.tiv_2015 = i.tiv_2015
+JOIN unique_loc AS u
+  ON u.lat = i.lat AND u.lon = i.lon;
+``
