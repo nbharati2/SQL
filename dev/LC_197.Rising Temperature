@@ -11,3 +11,11 @@ where w1.temperature > w2.temperature
 select id  from
 (select id ,temperature,
     lag(temperature) over (order by recordDate) as pre_day_temp from Weather )l where temperature > pre_day_temp
+
+#This query is best because we can do indexing in recordDate . The distinct removes if we have multiple ids
+select distinct w1.id
+from Weather w1
+inner join
+Weather w2 on
+w2.recordDate = w1.recordDate - INTERVAL 1 DAY 
+where w1.temperature > w2.temperature
